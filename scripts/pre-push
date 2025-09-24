@@ -1,0 +1,80 @@
+#!/bin/sh
+# pre-push git hook: Prevent push if there are LaTeX errors in the main document
+# Usage: Place this file in .git/hooks/ and make it executable (chmod +x .git/hooks/pre-push)
+
+# Arquivo que lista os projetos a serem verificados
+MANIFEST=projects.txt
+
+echo "\033[0;33m[INFO] Iniciando verificação de erros de LaTeX...\033[0m"
+
+# Verifica se o arquivo de manifest existe
+if [ ! -f "$MANIFEST" ]; then
+    echo "\033[0;31m[ERRO] O arquivo $MANIFEST não existe.\033[0m"
+    exit 1
+fi
+
+# Verifica se o arquivo de manifest não está vazio
+if [ "$(cat $MANIFEST)" = "" ]; then
+    echo "\033[0;31m[ERRO] O arquivo $MANIFEST está vazio.\033[0m"
+    exit 1
+fi
+
+# Encontra os projetos a serem verificados
+PROJECTS=$(cat $MANIFEST)
+
+# Verifica se o diretório de cada projeto existe
+for PROJECT in $PROJECTS; do
+    if [ ! -d "$PROJECT" ]; then
+        echo "\033[0;31m[ERRO] O diretório $PROJECT não existe.\033[0m"
+        exit 1
+    fi
+done
+
+# Verifica se o arquivo principal de cada projeto existe
+for PROJECT in $PROJECTS; do
+    MAIN_TEX="$PROJECT/$(basename $PROJECT)_principal.tex"
+    if [ ! -f "$MAIN_TEX" ]; then
+        echo "\033[0;31m[ERRO] O arquivo $MAIN_TEX não existe.\033[0m"
+        exit 1
+    fi
+done
+
+# Verifica se o diretório de build de cada projeto existe
+for PROJECT in $PROJECTS; do
+    BUILDDIR="$PROJECT/build"
+    if [ ! -d "$BUILDDIR" ]; then
+        echo "\033[0;31m[ERRO] O diretório $BUILDDIR não existe.\033[0m"
+        exit 1
+    fi
+done
+
+# Verifica se o push pode ser feito
+for PROJECT in $PROJECTS; do
+    MAIN_TEX="$PROJECT/$(basename $PROJECT)_principal.tex"
+    BUILDDIR="$PROJECT/build"
+
+    echo "\033[0;33m[INFO] Verificando erros de LaTeX em $PROJECT...\033[0m"
+
+    # Compile o documento (sem interatividade)
+    make -C $PROJECT > /dev/null 2>&1
+
+    # Verifica se o log do arquivo existe
+    LOG="$BUILDDIR/$(basename "$MAIN_TEX" .tex).log"
+    if [ ! -f "$LOG" ]; then
+        echo "\033[0;33m[INFO] O arquivo $LOG não existe. Recompilando $PROJECT...\033[0m"
+        make -C $PROJECT
+    fi
+
+
+    # Verifica se o log contém erros fatais do LaTeX
+    if grep -q "! " "$BUILDDIR/$(basename "$MAIN_TEX" .tex).log"; then
+        echo "\033[0;31m[ERRO] O push foi bloqueado: erros de LaTeX encontrados no arquivo $BUILDDIR/$(basename "$MAIN_TEX" .tex).log\033[0m"
+        echo "Revise os erros acima antes de tentar novamente."
+        exit 1
+    else
+        echo "\033[0;32m[OK] O push foi OK: não foram encontrados erros de LaTeX no arquivo $BUILDDIR/$(basename "$MAIN_TEX" .tex).log\033[0m"
+    fi
+done
+
+
+exit 0
