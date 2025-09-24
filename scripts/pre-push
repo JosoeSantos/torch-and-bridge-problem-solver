@@ -32,7 +32,7 @@ done
 
 # Verifica se o arquivo principal de cada projeto existe
 for PROJECT in $PROJECTS; do
-    MAIN_TEX="$PROJECT/$(basename $PROJECT)_principal.tex"
+    MAIN_TEX="$PROJECT/$(basename $PROJECT)_main.tex"
     if [ ! -f "$MAIN_TEX" ]; then
         echo "\033[0;31m[ERRO] O arquivo $MAIN_TEX não existe.\033[0m"
         exit 1
