@@ -1,8 +1,6 @@
 # Projeto de Apresentação em LaTeX
 
 ## Introdução
-Esse projeto contém o código usado no trabalho principal da materia Pesquisa Operacional que foi cursado no primeiro semestre de 2025. O objetivo do que foi desenvolvido aqui é criar e resolver um modelo de programação linear para a organização de armazéns de bobinas de aço. 
-Mas detalhes estão nas apresentações e artigo em LaTex presentes neste repositório.
 
 ## Passo a passo para rodar o projeto
 
