@@ -34,3 +34,13 @@ def dijkstra(graph, start):
 # Adicione esta função para uso no teste
 def dijkstra_path(graph, start):
     return dijkstra(graph, start)
+
+def reconstruct_path(predecessor, start, end):
+    """Reconstrói o caminho do vértice start até end."""
+    path = []
+    current = end
+    while current is not None:
+        path.append(current)
+        current = predecessor[current]
+    path.reverse()  # Inverte para obter na ordem correta
+    return path if path[0] == start else []  # Retorna caminho válido ou vazio

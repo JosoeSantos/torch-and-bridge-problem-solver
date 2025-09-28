@@ -1,7 +1,7 @@
 from collections import deque
 from TAD import Graph, Edge
 from Bfs import bfs, reconstruct_path
-from Dijkstra import dijkstra, dijkstra_path
+from Dijkstra import dijkstra, dijkstra_path, reconstruct_path
 from itertools import combinations 
 # gera todas as combinações possiveis de um conjunto de elementos
 
@@ -89,17 +89,21 @@ goal_v  = key_state(goal)
 dist, predecessor = bfs(G, start_v)
 
 # Exibir as distâncias mínimas
-print("Menores distâncias (número de arestas):", dist)
+#print("Menores distâncias (número de arestas):", dist)
 
 # Exibir os caminhos para cada nó
 path = reconstruct_path(predecessor, start_v, goal_v)
 
-print("Caminho (menor nº de passos):")
-print(path if path else "goal não alcançado") # como o bfs n leva em consideração os pesos
+#print("Caminho (menor nº de passos):")
+#print(path if path else "goal não alcançado") # como o bfs n leva em consideração os pesos
 # o output n necessariamente sera o caminho otimo
 
 
-distances = dijkstra(G.graph, start_v)
-best_path = dijkstra_path(G.graph, start_v)
+#distances = dijkstra(G.graph, start_v)
+distances, pred  = dijkstra_path(G.graph, start_v)
 
-print(best_path)
+path = reconstruct_path(pred, start_v, goal_v)
+cost = distances[goal_v]
+
+print(f"Caminho mais curto de Paris para Rana: {path}")
+print(f"Custo total: {cost}")
