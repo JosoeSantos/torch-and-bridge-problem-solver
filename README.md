@@ -1,6 +1,35 @@
 # Projeto de Apresentação em LaTeX
 
 ## Introdução
+Antes do passo a passo para o projeto em si.
+
+
+## Criação do ambiente virtual 
+
+### Linux/macOS
+```
+# cria venv na pasta .venv
+python3 -m venv .venv
+
+# ativa o venv
+source .venv/bin/activate
+
+# atualiza pip (opcional, mas recomendado)
+python -m pip install --upgrade pip
+```
+
+### Windows
+```
+# cria venv
+python -m venv .venv
+
+# ativa o venv
+.\.venv\Scripts\Activate.ps1
+
+# atualiza pip (opcional)
+python -m pip install --upgrade pip
+
+```
 
 ## Passo a passo para rodar o projeto
 
@@ -19,6 +48,10 @@ Certifique-se de ter as seguintes dependências instaladas no seu sistema:
 - **Git**: para clonar e versionar o repositório.
 - **LaTeX**: distribuição recomendada [TeX Live](https://www.tug.org/texlive/) (Linux/macOS) ou [MikTeX](https://miktex.org/) (Windows).
 - **Make**: normalmente já vem instalado em sistemas Unix (Linux/macOS). No Windows, pode ser instalado via [Chocolatey](https://chocolatey.org/) ou [Gow](https://github.com/bmatzelle/gow).
+
+```
+pip install -r requirements.txt
+```
 
 #### Instalação no Ubuntu/Debian:
 ```sh
