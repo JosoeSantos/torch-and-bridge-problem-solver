@@ -25,8 +25,8 @@ TIMES = {"A": 1, "B": 2, "C": 5, "D": 10}
 ALL = ["A", "B", "C", "D"]
 
 # Estado inicial e objetivo
-start = (["A", "B", "C", "D"], "init")
-goal = ([], "final")
+start = (["A", "B", "C", "D"], 0) # 0 - init, 1 - final
+goal = ([], 1)
 
 def cost(movers):
     """Custo da ação = tempo da pessoa mais lenta"""
@@ -47,19 +47,19 @@ def successors(state):
     left, torch = state
     left = list(left)
     
-    if torch == "init":
+    if torch == 0:
         # Escolher 1 ou 2 pessoas do lado esquerdo para ir
         for k in (1, 2):
             for movers in combinations(left, k):
                 new_left = [p for p in left if p not in movers]
-                yield (new_left, "final"), movers, cost(movers) # yeld retorna o valor mas mantem o valor de onde parou
+                yield (new_left, 1), movers, cost(movers) # yeld retorna o valor mas mantem o valor de onde parou
 
     else:  # tocha está no final
         right = [p for p in ALL if p not in left]
         for k in (1, 2):
             for movers in combinations(right, k):
                 new_left = left + list(movers)
-                yield (new_left, "init"), movers, cost(movers)
+                yield (new_left, 0), movers, cost(movers)
 
 def init_graph():
     G = Graph()
