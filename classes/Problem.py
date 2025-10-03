@@ -2,7 +2,9 @@ from collections import deque
 from TAD import Graph, Edge
 from Bfs import bfs, reconstruct_path
 from Dijkstra import dijkstra, dijkstra_path, reconstruct_path
-from itertools import combinations 
+from itertools import combinations
+
+from Dfs import dfs, dfs_path_reconstruct_path 
 # gera todas as combinações possiveis de um conjunto de elementos
 
 '''
@@ -101,9 +103,16 @@ path = reconstruct_path(predecessor, start_v, goal_v)
 
 #distances = dijkstra(G.graph, start_v)
 distances, pred  = dijkstra_path(G.graph, start_v)
-
 path = reconstruct_path(pred, start_v, goal_v)
+
+
 cost = distances[goal_v]
 
 print(f"Caminho mais curto de Paris para Rana: {path}")
 print(f"Custo total: {cost}")
+
+pred = dfs(G.graph, start_v)
+path = dfs_path_reconstruct_path(pred, start_v, goal_v)
+
+print(f"Caminho pelo DFS de Paris para Rana: {path}")
+
