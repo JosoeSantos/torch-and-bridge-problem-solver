@@ -5,7 +5,8 @@ from Dijkstra import dijkstra, dijkstra_path, reconstruct_path
 from itertools import combinations
 from array import array
 from Dfs import dfs, dfs_path_reconstruct_path
-from GraphPlotter import GraphPlotter 
+from GraphPlotter import GraphPlotter
+from Astar import a_star, path_cost 
 # gera todas as combinações possiveis de um conjunto de elementos
 
 '''
@@ -23,13 +24,27 @@ Output:
 ('B', 'C')
 '''
 
+N = 4  # número de pessoas
+
+def fib_n(n):
+    if n <= 0:
+        return 0
+    elif n == 1:
+        return 1
+    else:
+        return fib_n(n-1) + fib_n(n-2)
+
 # Defines
-TIMES = [1, 2, 5, 10]
+TIMES = [1, 2, 5, 10] + [fib_n(i)*10 for i in range(4, N)]  # tempos das pessoas
 ALL = ["A", "B", "C", "D"]
 
 # Estado inicial e objetivo
-state_start = array("B", [0]) * 5  # A, B, C, D, tocha
+# Essa é a forma mais rápida de representar o estado
+# 0 = lado esquerdo, 1 = lado direito
+state_start = array("B", [0]) * (N + 1)  # A, B, C, D, tocha
 weights = [1, 2, 5, 10, 0] # pesos das arestas
+
+state_goal = array("B", [1]) * (N + 1)  # A, B, C, D, tocha
 
 def cost(movers): #AJ OK
     """Custo da ação = tempo da pessoa mais lenta"""
@@ -93,12 +108,10 @@ def init_graph():
 
 G, states = init_graph()
 
-plotter = GraphPlotter(G)
-plotter.plot()
 
 #print(G)  # lista as arestas u -> v (custo)
-start_v = key_state(start) 
-goal_v  = key_state(goal) 
+start_v = key_state(state_start) 
+goal_v  = key_state(state_goal) 
 
 dist, predecessor = bfs(G, start_v)
 
@@ -120,11 +133,33 @@ path = reconstruct_path(pred, start_v, goal_v)
 
 cost = distances[goal_v]
 
-print(f"Caminho mais curto de Paris para Rana: {path}")
+print(f"Caminho dijkstra: {path}")
 print(f"Custo total: {cost}")
 
 pred = dfs(G.graph, start_v)
-path = dfs_path_reconstruct_path(pred, start_v, goal_v)
+path_dfs = dfs_path_reconstruct_path(pred, start_v, goal_v)
 
-print(f"Caminho pelo DFS de Paris para Rana: {path}")
+print(f"Caminho DFS: {path}")
 
+def astar_heuristic(v):
+    state = states[v]
+    left = sum(1 for pos in state[:-1] if pos == 0)
+    return (left + 1) // 2 * 10  # estimativa otimista
+
+path_a = a_star(G.graph, start_v, goal_v, astar_heuristic)
+
+
+print(f"Caminho A*: {path}")
+print(f"Custo total: {path_cost(G.graph, path)}")
+
+plotter = GraphPlotter(G)
+plotter.create_nx_layout()
+plotter.plot_2d()
+# dijkstra é azul
+plotter.color_path(path, color="b")
+# astar é verde
+plotter.color_path(path_a, color="g")
+# dfs é vermelho
+plotter.color_path(path_dfs, color="r")
+# plotar o grafo
+plotter.show()
