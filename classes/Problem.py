@@ -27,10 +27,10 @@ TIMES = {"A": 1, "B": 2, "C": 5, "D": 10}
 ALL = ["A", "B", "C", "D"]
 
 # Estado inicial e objetivo
-start = (["A", "B", "C", "D"], 0) # 0 - init, 1 - final
-goal = ([], 1)
+state_start = [0, 0, 0, 0, 0] # A, B, C, D, tocha
+weights = [1, 2, 5, 10, 0] # pesos das arestas
 
-def cost(movers):
+def cost(movers): #AJ OK
     """Custo da ação = tempo da pessoa mais lenta"""
     bigger = None
     for p in movers:
@@ -39,35 +39,42 @@ def cost(movers):
     return bigger
     #return max(TIMES[p] for p in movers)
     
-def key_state(state): # funcao pra transformar o estado do problema em um vertice do grafo
-    left, torch = state
-    left_sorted = ",".join(sorted(left)) if left else "∅"
+def key_state(state): # AJ: Talvez não use # funcao pra transformar o estado do problema em um vertice do grafo
+    people = state[:-1]
+    torch = state[-1]
+
+    left_sorted = ",".join(sorted(people)) if people else "∅"
     return f"[{left_sorted}|{torch}]"
     
-def successors(state):
+def successors(state): # AJ OK
     "Gera todos os próximos estados possíveis a partir de um estado"
-    left, torch = state
-    left = list(left)
-    
-    if torch == 0:
+    left = [i for i, pos in enumerate(state[:-1]) if pos == 0]
+    right = [i for i, pos in enumerate(state[:-1]) if pos == 1]
+
+    if state[-1] == 0:
         # Escolher 1 ou 2 pessoas do lado esquerdo para ir
         for k in (1, 2):
             for movers in combinations(left, k):
-                new_left = [p for p in left if p not in movers]
-                yield (new_left, 1), movers, cost(movers) # yeld retorna o valor mas mantem o valor de onde parou
+                new_state = state[:]
+                for m in movers:
+                    new_state[m] = 1  # mover para o lado direito
+                new_state[-1] = 1  # mover a tocha para o lado direito
+                yield new_state, movers, cost(movers) # yeld retorna o valor mas mantem o valor de onde parou
 
     else:  # tocha está no final
-        right = [p for p in ALL if p not in left]
         for k in (1, 2):
             for movers in combinations(right, k):
-                new_left = left + list(movers)
-                yield (new_left, 0), movers, cost(movers)
+                new_state = state[:]
+                for m in movers:
+                    new_state[m] = 0  # mover para o lado esquerdo
+                new_state[-1] = 0  # mover a tocha para o lado esquerdo
+                yield new_state, movers, cost(movers)
 
 def init_graph():
     G = Graph()
-    queue = deque([start])
-    visited = {key_state(start): start}
-    
+    queue = deque([state_start])
+    visited = {key_state(state_start): state_start}
+
     while queue:
         state = queue.popleft()
         u = key_state(state)
