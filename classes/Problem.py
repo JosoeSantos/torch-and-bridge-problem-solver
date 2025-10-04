@@ -3,7 +3,7 @@ from TAD import Graph, Edge
 from Bfs import bfs, reconstruct_path
 from Dijkstra import dijkstra, dijkstra_path, reconstruct_path
 from itertools import combinations
-
+from array import array
 from Dfs import dfs, dfs_path_reconstruct_path
 from GraphPlotter import GraphPlotter 
 # gera todas as combinações possiveis de um conjunto de elementos
@@ -24,19 +24,19 @@ Output:
 '''
 
 # Defines
-TIMES = {"A": 1, "B": 2, "C": 5, "D": 10}
+TIMES = [1, 2, 5, 10]
 ALL = ["A", "B", "C", "D"]
 
 # Estado inicial e objetivo
-state_start = [0, 0, 0, 0, 0] # A, B, C, D, tocha
+state_start = array("B", [0]) * 5  # A, B, C, D, tocha
 weights = [1, 2, 5, 10, 0] # pesos das arestas
 
 def cost(movers): #AJ OK
     """Custo da ação = tempo da pessoa mais lenta"""
     bigger = None
-    for p in movers:
-        if bigger is None or TIMES[p] > bigger:
-            bigger = TIMES[p]
+    for p, idx in enumerate(movers):
+        if bigger is None or TIMES[idx] > bigger:
+            bigger = TIMES[idx]
     return bigger
     #return max(TIMES[p] for p in movers)
     
@@ -44,7 +44,7 @@ def key_state(state): # AJ: Talvez não use # funcao pra transformar o estado do
     people = state[:-1]
     torch = state[-1]
 
-    left_sorted = ",".join(sorted(people)) if people else "∅"
+    left_sorted = "".join(str(i) for i in people) if people else "∅"
     return f"[{left_sorted}|{torch}]"
     
 def successors(state): # AJ OK
