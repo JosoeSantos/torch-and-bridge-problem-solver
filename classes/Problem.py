@@ -4,7 +4,8 @@ from Bfs import bfs, reconstruct_path
 from Dijkstra import dijkstra, dijkstra_path, reconstruct_path
 from itertools import combinations
 
-from Dfs import dfs, dfs_path_reconstruct_path 
+from Dfs import dfs, dfs_path_reconstruct_path
+from GraphPlotter import GraphPlotter 
 # gera todas as combinações possiveis de um conjunto de elementos
 
 '''
@@ -84,6 +85,10 @@ def init_graph():
 
 
 G, states = init_graph()
+
+plotter = GraphPlotter(G)
+plotter.plot()
+
 #print(G)  # lista as arestas u -> v (custo)
 start_v = key_state(start) 
 goal_v  = key_state(goal) 

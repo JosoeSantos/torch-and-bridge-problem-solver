@@ -70,6 +70,19 @@ class Graph:
                     in_deg += 1
         return in_deg
     
+    def adjacency_matrix(self):
+        # Returns the adjacency matrix representation of the graph
+        vertices = list(self.graph.keys())
+        index = {v: i for i, v in enumerate(vertices)}
+        size = len(vertices)
+        matrix = [[0] * size for _ in range(size)]
+        
+        for u in self.graph:
+            for edge in self.graph[u]:
+                matrix[index[edge.u]][index[edge.v]] = edge.w
+        
+        return matrix
+    
     def get_neighbors(self, u):
         # Returns the neighbors of vertex u
         if u in self.graph:
