@@ -46,14 +46,15 @@ class GraphPlotter:
             )
         self.pos = nx.spring_layout(self.G, seed=42, dim=dim)
         
-    def color_path(self, path, color="r"):
+    def color_path(self, path, color="r", width=2.5):
         edge_list = [(u, v) for u, v in zip(path, path[1:])]
         nx.draw_networkx_edges(
             self.G,
             edgelist=edge_list,
             edge_color=color,
-            width=2.5,
+            width=width,
             pos=self.pos,
+            
         )
 
     def pretty_vertex(self, v):

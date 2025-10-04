@@ -156,10 +156,10 @@ plotter = GraphPlotter(G)
 plotter.create_nx_layout()
 plotter.plot_2d()
 # dijkstra é azul
-plotter.color_path(path, color="b")
+plotter.color_path(path, color="b", width=2.5)
 # astar é verde
-plotter.color_path(path_a, color="g")
+plotter.color_path(path_a, color="g", width=1.5)
 # dfs é vermelho
-plotter.color_path(path_dfs, color="r")
+plotter.color_path(path_dfs, color="r", width=0.7)
 # plotar o grafo
 plotter.show()
