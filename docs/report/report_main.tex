@@ -382,15 +382,44 @@ A escolha do algoritmo ideal depende da natureza do problema e da disponibilidad
 Para o caso da Ponte e da Tocha, o A* demonstrou ser o método mais eficiente em termos de custo computacional e qualidade da solução, quando utilizada uma heurística adequada à estrutura do problema.
 
 \section{Comparação e Discussão dos Resultados}
-Comparar os algoritmos aplicados para solucionar o puzzle.
-\begin{itemize}
-\item Critérios de comparação (tempo de execução, número de passos, consumo de memória, etc.);
-\item Tabelas e gráficos com resultados;
-\item Discussão dos pontos fortes e fracos de cada abordagem.
-\end{itemize}
+% Comparar os algoritmos aplicados para solucionar o puzzle.
+% \begin{itemize}
+%     \item Critérios de comparação (tempo de execução, número de passos, consumo de memória, etc.);
+%     \item Tabelas e gráficos com resultados;
+%     \item Discussão dos pontos fortes e fracos de cada abordagem.
+% \end{itemize}
+
+Vimos anteriormente que os algoritmos BFS e DFS possuem complexidade de tempo $O(n)$, enquanto Dijkstra e A* possuem complexidade $O(n \log n)$. Ao realizar a análise experimental, observa-se que Dijkstra apresenta o maior custo entre os algoritmos, enquanto o custo do A* é o menor. Isso ocorre porque a heurística escolhida foi adequada, reduzindo significativamente a quantidade de nós explorados no grafo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{execution_time.png}
+    \caption{Tempo de execução de cada algoritmo em função da quantidade de pessoas.}
+    \label{fig:cen2}
+\end{figure}
+
+No grafico abaixo é possivel perceber que o A* é muito eficiente em eliminar nós desnecessarios, enquanto o DFS visita a maior quantidade, chegando a um milhão de nós visitados em um problema com 15 pessoas.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{node_visited.png}
+    \caption{Quantidade de nós visitados em função da quantidade de pessoas.}
+    \label{fig:cen2}
+\end{figure}
+
+É importante notar também que o algoritmo BFS não garante solução ótima. Isso ocorre pois dois estados obtidos a partir do mesmo estado são explorados na mesma iteração, independentemente do seu custo. Assim, um caminho ótimo que passa por muitos estados de baixo custo pode ser explorado somente após um caminho não ótimo com poucos estados de maior custo.  
+Por outro lado, os algoritmos Dijkstra e A* garantem solução ótima, pois penalizam estados de alto custo, visitando primeiro aqueles com custo menor, independentemente da profundidade na árvore de busca.
 
 \section{Conclusão}
-Apresentar as conclusões gerais do trabalho, destacando os principais aprendizados e possíveis melhorias futuras.
+
+Este trabalho demonstrou a eficácia da modelagem do problema da Ponte e da Tocha como um problema de busca em espaço de estados, permitindo a aplicação e comparação sistemática de algoritmos clássicos de busca. A análise experimental evidenciou diferenças significativas entre eles em termos de eficiência, consumo de memória e garantia de optimalidade.  
+
+Foi possível observar que BFS e DFS, apesar de simples, apresentam limitações quanto à optimalidade quando os custos variam. Dijkstra garante soluções ótimas considerando custos, porém com maior custo computacional. O algoritmo A*, com uma heurística adequada, mostrou ser o mais eficiente, reduzindo bastante o número de nós explorados e o tempo de execução.  
+
+Os principais aprendizados incluem a importância de uma modelagem eficiente, a escolha adequada de estruturas de dados e o papel determinante de heurísticas na performance de algoritmos informados.  
+
+Como melhorias futuras, recomenda-se explorar heurísticas mais sofisticadas para o A*, investigar abordagens híbridas ou baseadas em aprendizado de máquina para estimativas de custo, e testar a modelagem em versões mais complexas do problema, incluindo restrições adicionais, visando ampliar a aplicabilidade e otimização das soluções.
+
 
 \section*{Referências}
 \bibliographystyle{plain}
