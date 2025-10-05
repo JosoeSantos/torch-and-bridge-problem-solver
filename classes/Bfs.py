@@ -1,29 +1,5 @@
 from collections import deque
 
-# def bfs():
-#     queue = deque()
-#     queue.append(start)
-#     father = {tuple(sorted(start[0])) + (start[1],): None}
-
-#     while queue:
-#         current = queue.popleft()
-#         if current == goal:
-#             # Reconstrói caminho
-#             path = []
-#             cur = current
-#             while father[tuple(sorted(cur[0])) + (cur[1],)] is not None:
-#                 cur, movers, c = father[tuple(sorted(cur[0])) + (cur[1],)]
-#                 path.append((cur, movers, c))
-#             path.reverse()
-#             return path
-
-#         for novo, movers, c in successors(current):
-#             key = tuple(sorted(novo[0])) + (novo[1],)
-#             if key not in father:
-#                 father[key] = (current, movers, c)
-#                 queue.append(novo)
-#     return None
-
 def bfs(graph, start):
     """Realiza a busca em largura (BFS) no grafo a partir de start."""
     dist = {vertex: float("inf") for vertex in graph.graph}  # Inicializa as distâncias como infinito

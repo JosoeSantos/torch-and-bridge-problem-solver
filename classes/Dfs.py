@@ -1,6 +1,3 @@
-from math import dist
-
-
 # Implementação do DFS para encontrar o caminho em um grafo
 def dfs(graph, start):
     visited = set()

@@ -1,7 +1,7 @@
 from collections import deque
-from TAD import Graph, Edge
+from TAD import Graph
 from Bfs import bfs, reconstruct_path
-from Dijkstra import dijkstra, dijkstra_path, reconstruct_path
+from Dijkstra import dijkstra_path, reconstruct_path
 from itertools import combinations
 from array import array
 from Dfs import dfs, dfs_path_reconstruct_path
