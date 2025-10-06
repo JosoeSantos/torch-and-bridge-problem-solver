@@ -68,67 +68,71 @@
     {\large \today}
 \end{titlepage}
 
+\clearpage
 \tableofcontents
-\newpage
+\clearpage
 
+% ==============================
+% INTRODUÇÃO
+% ==============================
 \section{Introdução}
-Este relatório tem como objetivo apresentar a solução para o clássico "Problema da Ponte e da Tocha", um quebra-cabeça clássico de travessia que serve como um excelente caso de estudo para a aplicação de algoritmos de busca e a modelagem de problemas em grafos. O problema consiste em mover um grupo de pessoas de um lado para o outro de uma ponte sob condições específicas, minimizando o tempo total da travessia.
+Este relatório tem como objetivo apresentar a solução para o clássico \textit{Problema da Ponte e da Tocha}, um quebra-cabeça que serve como excelente caso de estudo para a aplicação de algoritmos de busca e a modelagem de problemas em grafos. O problema consiste em mover um grupo de pessoas de um lado para o outro de uma ponte sob condições específicas, minimizando o tempo total da travessia.
 
-Para resolver este problema, o projeto o modelou formalmente como um problema de busca em espaço de estados, onde cada estado representa uma configuração possível das pessoas e da tocha, e as transições entre estados são as ações de travessia. Essa abordagem nos permite construir um grafo completo de estados, que é o ambiente ideal para testar e comparar diferentes algoritmos.
+Para resolver este problema, o projeto foi modelado formalmente como um problema de busca em espaço de estados, onde cada estado representa uma configuração possível das pessoas e da tocha. As transições entre estados são as ações de travessia. Essa abordagem permite construir um grafo completo de estados, ideal para testar e comparar diferentes algoritmos.
 
-Ao longo deste documento, detalharemos a modelagem do problema, as rotinas de busca implementadas --- incluindo Busca em Largura (BFS), Busca em Profundidade (DFS) e o algoritmo A* --- e, por fim, compararemos seus resultados para determinar a eficiência de cada método na busca pela solução ótima.
+Ao longo deste documento, detalharemos a modelagem do problema, as rotinas de busca implementadas — incluindo Busca em Largura (BFS), Busca em Profundidade (DFS) e o algoritmo A* — e, por fim, compararemos seus resultados para determinar a eficiência de cada método na busca pela solução ótima.
 
-\cite{cormen}.
+% \cite{cormen}.
 
 \section{Modelagem do Problema em Forma de Grafo}
 O problema da \textit{Ponte e da Tocha} foi modelado como um problema de busca em espaço de estados e também como um CSP (\textit{Constraint Satisfaction Problem}). Essa abordagem permite tanto a análise formal do problema em termos de grafos, como também a aplicação de algoritmos de busca clássicos para encontrar soluções ótimas. 
 
 A seguir, a modelagem será descrita em camadas: definição de estados, ações, função sucessora e custos.
 
-\subsection{Variáveis}
-Para modelar o problema da ponte com $N$ pessoas como um COP, definimos um conjunto de variáveis de decisão. A variável principal é o tempo de travessia de cada pessoa, e as variáveis auxiliares nos ajudarão a definir a sequência de movimentos.
+% \subsection{Variáveis}
+% Para modelar o problema da ponte com $N$ pessoas como um COP, definimos um conjunto de variáveis de decisão. A variável principal é o tempo de travessia de cada pessoa, e as variáveis auxiliares nos ajudarão a definir a sequência de movimentos.
 
-\begin{itemize}
-    \item $t_i$: Variável que representa o tempo de travessia para a pessoa $i \in \{1, \dots, N\}$.
-    \item $m_{i,j,k}$: Variável binária, onde $m_{i,j,k} = 1$ se as pessoas $i$ e $j$ atravessam a ponte juntas no passo $k$ (ida ou volta). Se apenas a pessoa $i$ atravessar, usamos $m_{i,0,k}$.
-    \item $s_{i,k}$: Variável binária, onde $s_{i,k} = 1$ se a pessoa $i$ estiver no lado de partida (origem) após o passo $k$.
-    \item $p_k$: Variável binária, onde $p_k=1$ se o passo $k$ é uma travessia de ida e $p_k=0$ se é uma travessia de volta.
-\end{itemize}
+% \begin{itemize}
+%     \item $t_i$: Variável que representa o tempo de travessia para a pessoa $i \in \{1, \dots, N\}$.
+%     \item $m_{i,j,k}$: Variável binária, onde $m_{i,j,k} = 1$ se as pessoas $i$ e $j$ atravessam a ponte juntas no passo $k$ (ida ou volta). Se apenas a pessoa $i$ atravessar, usamos $m_{i,0,k}$.
+%     \item $s_{i,k}$: Variável binária, onde $s_{i,k} = 1$ se a pessoa $i$ estiver no lado de partida (origem) após o passo $k$.
+%     \item $p_k$: Variável binária, onde $p_k=1$ se o passo $k$ é uma travessia de ida e $p_k=0$ se é uma travessia de volta.
+% \end{itemize}
 
-\subsection{Domínio das Variáveis}
-\begin{itemize}
-    \item $t_i \in \{T_1, T_2, \dots, T_N\}$, onde $T_i$ é o tempo individual da pessoa $i$.
-    \item $m_{i,j,k} \in \{0, 1\}$.
-    \item $s_{i,k} \in \{0, 1\}$.
-    \item $p_k \in \{0, 1\}$.
-\end{itemize}
+% \subsection{Domínio das Variáveis}
+% \begin{itemize}
+%     \item $t_i \in \{T_1, T_2, \dots, T_N\}$, onde $T_i$ é o tempo individual da pessoa $i$.
+%     \item $m_{i,j,k} \in \{0, 1\}$.
+%     \item $s_{i,k} \in \{0, 1\}$.
+%     \item $p_k \in \{0, 1\}$.
+% \end{itemize}
 
-\subsection{Função Objetivo}
-Nosso objetivo é minimizar o tempo total da travessia, que é a soma dos tempos de cada movimento.
+% \subsection{Função Objetivo}
+% Nosso objetivo é minimizar o tempo total da travessia, que é a soma dos tempos de cada movimento.
 
-\[
-\min \sum_{k=1}^{K} \left( \sum_{i=1}^{N} \sum_{j=0}^{N} m_{i,j,k} \cdot \max(T_i, T_j) \right)
-\]
+% \[
+% \min \sum_{k=1}^{K} \left( \sum_{i=1}^{N} \sum_{j=0}^{N} m_{i,j,k} \cdot \max(T_i, T_j) \right)
+% \]
 
-Onde $T_0$ é o tempo de uma "pessoa imaginária" com tempo 0, para os casos de travessia única ($j=0$).
-O número de passos $K$ pode ser estimado, mas não é fixo a priori.
+% Onde $T_0$ é o tempo de uma "pessoa imaginária" com tempo 0, para os casos de travessia única ($j=0$).
+% O número de passos $K$ pode ser estimado, mas não é fixo a priori.
 
-\subsection{Restrições}
-\subsubsection{Restrições de Movimento e Posição}
-\begin{enumerate}
-    \item \textbf{Apenas uma ação por passo:}
-    \[
-    \sum_{i=1}^{N} \sum_{j=i}^{N} m_{i,j,k} + \sum_{i=1}^{N} m_{i,0,k} = 1 \quad \forall k
-    \]
-    \item \textbf{Consistência da Posição:}
-    \[
-    s_{i,k} = s_{i,k-1} + (p_k \cdot (\sum_{j=1}^{N} m_{i,j,k})) - ((1-p_k) \cdot (\sum_{j=1}^{N} m_{i,j,k})) \quad \forall i,k
-    \]
-    \item \textbf{Restrição da Tocha:}
-    \[
-    p_k = 1 - p_{k-1} \quad \forall k > 1
-    \]
-\end{enumerate}
+% \subsection{Restrições}
+% \subsubsection{Restrições de Movimento e Posição}
+% \begin{enumerate}
+%     \item \textbf{Apenas uma ação por passo:}
+%     \[
+%     \sum_{i=1}^{N} \sum_{j=i}^{N} m_{i,j,k} + \sum_{i=1}^{N} m_{i,0,k} = 1 \quad \forall k
+%     \]
+%     \item \textbf{Consistência da Posição:}
+%     \[
+%     s_{i,k} = s_{i,k-1} + (p_k \cdot (\sum_{j=1}^{N} m_{i,j,k})) - ((1-p_k) \cdot (\sum_{j=1}^{N} m_{i,j,k})) \quad \forall i,k
+%     \]
+%     \item \textbf{Restrição da Tocha:}
+%     \[
+%     p_k = 1 - p_{k-1} \quad \forall k > 1
+%     \]
+% \end{enumerate}
 
 \subsection{Estados}
 Seguindo a descrição do enunciado e visualizando a implementação em código, o estado do problema é representado por um array binário, que fornece uma representação compacta e eficiente.
@@ -163,21 +167,22 @@ O custo de cada ação é definido como o tempo da travessia, que corresponde ao
 \subsection{Exemplos Ilustrativos de Caminhos}
 Para uma melhor clareza e visualização nos diagramas de grafo, os estados são representados utilizando a notação textual original, com o conjunto de pessoas no lado inicial e a posição da tocha. Por exemplo, o estado $[0, 0, 0, 0, 0]$ é visualizado como `({A, B, C, D}, início)`, e o estado $[1, 1, 1, 1, 1]$ como `({}, final)`. Esta representação é mais intuitiva para o entendimento humano, embora a implementação do código utilize a representação binária mais eficiente.
 
-Na Figura \ref{fig:cen1} é mostrado o caminho ótimo com cinco movimentos, cujo custo total é de 17 minutos. Esse caminho é considerado ótimo pois minimiza o tempo total necessário para que todas as pessoas atravessem a ponte.
+A Figura \ref{fig:optimal_path} mostra o caminho ótimo com cinco movimentos e custo total de 17 minutos.
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{optimal_path}
-    \caption{Grafo ilustrando a sequência ótima em 5 passos, com movimentos de ida e volta intercalados e custo total de 17 minutos.}
-    \label{fig:cen1}
+    \includegraphics[width=0.8\linewidth]{optimal_path.png}
+    \caption{Caminho ótimo de travessia em cinco passos (custo total de 17 minutos).}
+    \label{fig:optimal_path}
 \end{figure}
 
-Na Figura \ref{fig:cen2} apresenta-se um exemplo de ramificação do grafo de estados, mostrando duas escolhas possíveis de ida (A+B ou A+C) e os estados resultantes após o retorno da tocha. Essa ilustração evidencia a multiplicidade de caminhos que podem ser explorados durante a busca.
+A Figura \ref{fig:ramification} mostra um exemplo de ramificação do grafo de estados.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{ramification.png}
-    \caption{Grafo com ramificação: duas possibilidades de ida e as respectivas voltas, mostrando a expansão do espaço de estados.}
-    \label{fig:cen2}
+    \caption{Ramificação do grafo de estados com duas escolhas iniciais.}
+    \label{fig:ramification}
 \end{figure}
 
 \subsection{Definição Formal do Grafo}
@@ -404,19 +409,19 @@ Para o caso da Ponte e da Tocha, o A* demonstrou ser o método mais eficiente em
 Vimos anteriormente que os algoritmos BFS e DFS possuem complexidade de tempo $O(n)$, enquanto Dijkstra e A* possuem complexidade $O(n \log n)$. Ao realizar a análise experimental, observa-se que Dijkstra apresenta o maior custo entre os algoritmos, enquanto o custo do A* é o menor. Isso ocorre porque a heurística escolhida foi adequada, reduzindo significativamente a quantidade de nós explorados no grafo.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\linewidth]{execution_time.png}
-    \caption{Tempo de execução de cada algoritmo em função da quantidade de pessoas.}
-    \label{fig:cen2}
+    \centering
+    \includegraphics[width=0.8\linewidth]{execution_time.png}
+    \caption{Tempo de execução em função do número de pessoas.}
+    \label{fig:execution_time}
 \end{figure}
 
 No grafico abaixo é possivel perceber que o A* é muito eficiente em eliminar nós desnecessarios, enquanto o DFS visita a maior quantidade, chegando a um milhão de nós visitados em um problema com 15 pessoas.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\linewidth]{node_visited.png}
-    \caption{Quantidade de nós visitados em função da quantidade de pessoas.}
-    \label{fig:cen2}
+    \centering
+    \includegraphics[width=0.8\linewidth]{node_visited.png}
+    \caption{Número de nós visitados em função da quantidade de pessoas.}
+    \label{fig:node_visited}
 \end{figure}
 
 É importante notar também que o algoritmo BFS não garante solução ótima. Isso ocorre pois dois estados obtidos a partir do mesmo estado são explorados na mesma iteração, independentemente do seu custo. Assim, um caminho ótimo que passa por muitos estados de baixo custo pode ser explorado somente após um caminho não ótimo com poucos estados de maior custo.  
@@ -432,9 +437,10 @@ Os principais aprendizados incluem a importância de uma modelagem eficiente, a 
 
 Como melhorias futuras, recomenda-se explorar heurísticas mais sofisticadas para o A*, investigar abordagens híbridas ou baseadas em aprendizado de máquina para estimativas de custo, e testar a modelagem em versões mais complexas do problema, incluindo restrições adicionais, visando ampliar a aplicabilidade e otimização das soluções.
 
-\section*{Referências}
+% \section*{Referências}
+\clearpage
+\addcontentsline{toc}{section}{Referências}
 \bibliographystyle{plain}
 \bibliography{references}
 
 \end{document}
->>>>>>> 57689c43438edb28a83a2269368ebc9bb6dec058

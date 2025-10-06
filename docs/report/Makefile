@@ -1,7 +1,7 @@
 # Makefile for building apresentacao1_principal.tex with references
 
 TEX=pdflatex
-BIBTEX=bibtex
+#BIBTEX=bibtex
 MAIN=report_main
 BUILDDIR=build
 
@@ -9,7 +9,7 @@ all: $(BUILDDIR)/$(MAIN).pdf
 
 $(BUILDDIR)/$(MAIN).pdf: $(MAIN).tex | $(BUILDDIR)
 	$(TEX) -output-directory=$(BUILDDIR) $(MAIN).tex
-	$(BIBTEX) $(BUILDDIR)/$(MAIN)
+	
 	$(TEX) -output-directory=$(BUILDDIR) $(MAIN).tex
 	$(TEX) -output-directory=$(BUILDDIR) $(MAIN).tex
 
