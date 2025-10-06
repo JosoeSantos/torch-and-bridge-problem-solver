@@ -129,10 +129,6 @@ path_dfs = dfs_path_reconstruct_path(pred, start_v, goal_v)
 
 # print(f"Caminho DFS: {path}")
 
-# def astar_heuristic(v):
-#     state = states[v]
-#     left = sum(1 for pos in state[:-1] if pos == 0)
-#     return (left + 1) // 2 * 10  # estimativa otimista
 def astar_heuristic(v):
     state = states[v]
     
@@ -184,8 +180,6 @@ path_dijkstra = reconstruct_path(pred_dijkstra, start_v, goal_v)
 print(f"Dijkstra: Caminho encontrado em {dijkstra_duration:.4f} segundos.")
 print(f"Custo total (Dijkstra): {cost_dijkstra}")
 
-
-
 # Execução do A*
 start_time_astar = time.time()
 path_a_star = a_star(G.graph, start_v, goal_v, astar_heuristic)
@@ -197,16 +191,16 @@ cost_astar = path_cost(G.graph, path_a_star)
 print(f"A*: Caminho encontrado em {astar_duration:.4f} segundos.")
 print(f"Custo total (A*): {cost_astar}")
 
-# plotter = GraphPlotter(G, pretty=False)
-# plotter.create_nx_layout()
-# plotter.plot_2d()
+plotter = GraphPlotter(G, pretty=False)
+plotter.create_nx_layout()
+plotter.plot_2d()
 # dijkstra é azul
-# plotter.color_path(path_dijkstra, color="b", width=4.5)
-# # astar é verde
-# plotter.color_path(path_a_star, color="orange", width=2.5)
-# # dfs é vermelho
-# plotter.color_path(path_dfs, color="g", width=1.5)
-# # bfs é laranja
-# plotter.color_path(path, color="r", width=1.0)
-# # plotar o grafo
-# plotter.show()
+plotter.color_path(path_dijkstra, color="b", width=4.5)
+# astar é verde
+plotter.color_path(path_a_star, color="orange", width=2.5)
+# dfs é vermelho
+plotter.color_path(path_dfs, color="g", width=1.5)
+# bfs é laranja
+plotter.color_path(path, color="r", width=1.0)
+# plotar o grafo
+plotter.show()
