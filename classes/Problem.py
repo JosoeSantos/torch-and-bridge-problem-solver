@@ -196,11 +196,11 @@ plotter.create_nx_layout()
 plotter.plot_2d()
 # dijkstra é azul
 plotter.color_path(path_dijkstra, color="b", width=4.5)
-# astar é verde
+# astar é laranja   
 plotter.color_path(path_a_star, color="orange", width=2.5)
-# dfs é vermelho
+# dfs é verde
 plotter.color_path(path_dfs, color="g", width=1.5)
-# bfs é laranja
+# bfs é vermelho
 plotter.color_path(path, color="r", width=1.0)
 # plotar o grafo
 plotter.show()
