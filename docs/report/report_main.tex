@@ -1,3 +1,4 @@
+
 \documentclass[12pt,a4paper]{article}
 
 % Pacotes básicos
@@ -11,6 +12,22 @@
 \usepackage{caption}
 \usepackage{cite}
 \usepackage{listings} % para formatar blocos de código
+\usepackage{enumitem} % para controlar listas
+\usepackage{xcolor}   % necessário para cores no listings
+
+% Configurações do listings
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny,
+  frame=single,
+  breaklines=true,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{red},
+  commentstyle=\color{green!60!black}\itshape,
+  showstringspaces=false
+}
 
 \graphicspath{{./}{../}{../../}{../../plots/}{../../plots/img/}}
 
@@ -39,10 +56,11 @@
     
     \begin{flushleft}
         \textbf{Alunos:}\\
-        Áquila Oliveira Souza — 2021019327\\
-        Felippe Veloso Marinho — 2021072260\\
-        Jefferson Pereira de Souza — 2022099049\\
-        Josoé Santos Queiroz — 2019026982
+        Áquila Oliveira Souza --- 2021019327\\
+        Arthur Jorge --- 2022055718\\
+        Felippe Veloso Marinho --- 2021072260\\
+        Jefferson Pereira de Souza --- 2022099049\\
+        Josoé Santos Queiroz --- 2019026982
     \end{flushleft}
     
     \vfill
@@ -58,7 +76,7 @@ Este relatório tem como objetivo apresentar a solução para o clássico "Probl
 
 Para resolver este problema, o projeto o modelou formalmente como um problema de busca em espaço de estados, onde cada estado representa uma configuração possível das pessoas e da tocha, e as transições entre estados são as ações de travessia. Essa abordagem nos permite construir um grafo completo de estados, que é o ambiente ideal para testar e comparar diferentes algoritmos.
 
-Ao longo deste documento, detalharemos a modelagem do problema, as rotinas de busca implementadas — incluindo Busca em Largura (BFS), Busca em Profundidade (DFS) e o algoritmo A* — e, por fim, compararemos seus resultados para determinar a eficiência de cada método na busca pela solução ótima.
+Ao longo deste documento, detalharemos a modelagem do problema, as rotinas de busca implementadas --- incluindo Busca em Largura (BFS), Busca em Profundidade (DFS) e o algoritmo A* --- e, por fim, compararemos seus resultados para determinar a eficiência de cada método na busca pela solução ótima.
 
 \cite{cormen}.
 
@@ -67,8 +85,7 @@ O problema da \textit{Ponte e da Tocha} foi modelado como um problema de busca e
 
 A seguir, a modelagem será descrita em camadas: definição de estados, ações, função sucessora e custos.
 
-\subsection*{Variáveis}
-
+\subsection{Variáveis}
 Para modelar o problema da ponte com $N$ pessoas como um COP, definimos um conjunto de variáveis de decisão. A variável principal é o tempo de travessia de cada pessoa, e as variáveis auxiliares nos ajudarão a definir a sequência de movimentos.
 
 \begin{itemize}
@@ -78,8 +95,7 @@ Para modelar o problema da ponte com $N$ pessoas como um COP, definimos um conju
     \item $p_k$: Variável binária, onde $p_k=1$ se o passo $k$ é uma travessia de ida e $p_k=0$ se é uma travessia de volta.
 \end{itemize}
 
-\subsection*{Domínio das Variáveis}
-
+\subsection{Domínio das Variáveis}
 \begin{itemize}
     \item $t_i \in \{T_1, T_2, \dots, T_N\}$, onde $T_i$ é o tempo individual da pessoa $i$.
     \item $m_{i,j,k} \in \{0, 1\}$.
@@ -87,7 +103,7 @@ Para modelar o problema da ponte com $N$ pessoas como um COP, definimos um conju
     \item $p_k \in \{0, 1\}$.
 \end{itemize}
 
-\subsection*{Função Objetivo}
+\subsection{Função Objetivo}
 Nosso objetivo é minimizar o tempo total da travessia, que é a soma dos tempos de cada movimento.
 
 \[
@@ -97,9 +113,8 @@ Nosso objetivo é minimizar o tempo total da travessia, que é a soma dos tempos
 Onde $T_0$ é o tempo de uma "pessoa imaginária" com tempo 0, para os casos de travessia única ($j=0$).
 O número de passos $K$ pode ser estimado, mas não é fixo a priori.
 
-\subsection*{Restrições}
-
-\subsubsection*{Restrições de Movimento e Posição}
+\subsection{Restrições}
+\subsubsection{Restrições de Movimento e Posição}
 \begin{enumerate}
     \item \textbf{Apenas uma ação por passo:}
     \[
@@ -145,26 +160,24 @@ Cada ação corresponde ao movimento de uma ou duas pessoas através da ponte, l
 
 O custo de cada ação é definido como o tempo da travessia, que corresponde ao tempo da pessoa mais lenta entre as selecionadas.
 
-
-
 \subsection{Exemplos Ilustrativos de Caminhos}
 Para uma melhor clareza e visualização nos diagramas de grafo, os estados são representados utilizando a notação textual original, com o conjunto de pessoas no lado inicial e a posição da tocha. Por exemplo, o estado $[0, 0, 0, 0, 0]$ é visualizado como `({A, B, C, D}, início)`, e o estado $[1, 1, 1, 1, 1]$ como `({}, final)`. Esta representação é mais intuitiva para o entendimento humano, embora a implementação do código utilize a representação binária mais eficiente.
 
 Na Figura \ref{fig:cen1} é mostrado o caminho ótimo com cinco movimentos, cujo custo total é de 17 minutos. Esse caminho é considerado ótimo pois minimiza o tempo total necessário para que todas as pessoas atravessem a ponte.
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\linewidth]{optimal_path}
-    \caption{Grafo ilustrando a sequência ótima em 5 passos, com movimentos de ida e volta intercalados e custo total de 17 minutos.}
-    \label{fig:cen1}
+    \centering
+    \includegraphics[width=0.8\linewidth]{optimal_path}
+    \caption{Grafo ilustrando a sequência ótima em 5 passos, com movimentos de ida e volta intercalados e custo total de 17 minutos.}
+    \label{fig:cen1}
 \end{figure}
 
 Na Figura \ref{fig:cen2} apresenta-se um exemplo de ramificação do grafo de estados, mostrando duas escolhas possíveis de ida (A+B ou A+C) e os estados resultantes após o retorno da tocha. Essa ilustração evidencia a multiplicidade de caminhos que podem ser explorados durante a busca.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\linewidth]{ramification.png}
-    \caption{Grafo com ramificação: duas possibilidades de ida e as respectivas voltas, mostrando a expansão do espaço de estados.}
-    \label{fig:cen2}
+    \centering
+    \includegraphics[width=0.8\linewidth]{ramification.png}
+    \caption{Grafo com ramificação: duas possibilidades de ida e as respectivas voltas, mostrando a expansão do espaço de estados.}
+    \label{fig:cen2}
 \end{figure}
 
 \subsection{Definição Formal do Grafo}
@@ -182,7 +195,7 @@ De forma resumida:
 
 Para permitir a escalabilidade do problema, os tempos foram definidos da seguinte forma:
 
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}
 TIMES = [1, 2, 5, 10] + [fib_n(i)*10 for i in range(4, N)]
 \end{lstlisting}
 
@@ -206,40 +219,43 @@ TIMES = [1, 2, 5, 10, 30, 50]
 \begin{itemize}
     \item \textbf{\texttt{cost(movers)}}: Calcula o custo de uma travessia (tempo da pessoa mais lenta).
     \item \textbf{\texttt{successors(state)}}: Gera todos os estados sucessores válidos a partir de um estado.
+    \item \textbf{\texttt{astar\_heuristic()}}: estima o custo mínimo de tempo necessário para que todas as pessoas no lado esquerdo da ponte cheguem ao lado direito.
+    \begin{itemize}
+        \item A função é dividida em dois casos, dependendo da posição da tocha, para fornecer uma estimativa precisa e otimista:
+        \item \textbf{Tocha no lado esquerdo:} O custo estimado é a soma do tempo das duas pessoas mais lentas que restam, pois elas definem o custo mínimo de travessia para o restante do grupo. Se resta apenas uma pessoa, o custo é o tempo dela.
+        \item \textbf{Tocha no lado direito:} O custo estimado é o tempo da pessoa mais rápida que está no lado direito, pois ela é a candidata ideal para retornar a tocha.
+    \end{itemize}
     \item \textbf{\texttt{bfs() / dfs() / astar()}}: Implementam os algoritmos de busca clássicos empregados na resolução do problema, descritos a seguir de forma geral.
-    Os três algoritmos utilizados compartilham a mesma estrutura conceitual básica: a exploração sistemática do espaço de estados do problema, a partir de um estado inicial, até alcançar o estado objetivo. O que os diferencia é a forma como cada um escolhe qual estado expandir a cada iteração.
-
-    \paragraph{1. Busca em Largura (BFS)}  
-    A \textit{Breadth-First Search} realiza uma busca em camadas, explorando primeiro todos os estados alcançáveis com um número mínimo de passos antes de avançar para níveis mais profundos.  
-    É garantido que a BFS encontra a solução ótima quando o custo de cada transição é uniforme. No contexto do problema da ponte, isso equivale a encontrar a sequência de travessias com o menor número de movimentos, ainda que não necessariamente com o menor tempo total.
-
-    \paragraph{2. Busca em Profundidade (DFS)}  
-    A \textit{Depth-First Search} adota uma abordagem recursiva ou baseada em pilha, explorando o caminho atual até o limite antes de retroceder.  
-    Embora possa ser mais eficiente em memória, a DFS não garante a optimalidade da solução, e em alguns casos pode se perder em ramos muito profundos ou redundantes. No entanto, é útil para compreender a estrutura do grafo de estados e verificar a conectividade do espaço de busca.
-
-    \paragraph{3. Busca A* (A Estrela)}  
-    O algoritmo \textit{A*} combina os princípios da busca em largura com uma função heurística $h(n)$ que estima o custo restante até o objetivo.  
-    Ele utiliza uma função de avaliação $f(n) = g(n) + h(n)$, onde $g(n)$ é o custo acumulado até o nó atual e $h(n)$ é a estimativa do custo restante.  
-    Essa combinação permite que o A* explore o espaço de busca de maneira informada, priorizando os caminhos mais promissores e garantindo a solução ótima desde que a heurística seja admissível (isto é, nunca superestime o custo real).
-
 \end{itemize}
 
-\section{Algoritmos de Busca Estudados}
+Os três algoritmos utilizados compartilham a mesma estrutura conceitual básica: a exploração sistemática do espaço de estados do problema, a partir de um estado inicial, até alcançar o estado objetivo. O que os diferencia é a forma como cada um escolhe qual estado expandir a cada iteração.
 
-Nesta seção, são detalhados os algoritmos de busca implementados no projeto: \textbf{Busca em Largura (BFS)}, \textbf{Busca em Profundidade (DFS)}, \textbf{Dijkstra} e \textbf{A*}.  
+\subsubsection{Busca em Largura (BFS)} 
+A \textit{Breadth-First Search} realiza uma busca em camadas, explorando primeiro todos os estados alcançáveis com um número mínimo de passos antes de avançar para níveis mais profundos. 
+É garantido que a BFS encontra a solução ótima quando o custo de cada transição é uniforme. No contexto do problema da ponte, isso equivale a encontrar a sequência de travessias com o menor número de movimentos, ainda que não necessariamente com o menor tempo total.
+
+\subsubsection{Busca em Profundidade (DFS)} 
+A \textit{Depth-First Search} adota uma abordagem recursiva ou baseada em pilha, explorando o caminho atual até o limite antes de retroceder. 
+Embora possa ser mais eficiente em memória, a DFS não garante a optimalidade da solução, e em alguns casos pode se perder em ramos muito profundos ou redundantes. No entanto, é útil para compreender a estrutura do grafo de estados e verificar a conectividade do espaço de busca.
+
+\subsubsection{Busca A* (A Estrela)} 
+O algoritmo \textit{A*} combina os princípios da busca em largura com uma função heurística $h(n)$ que estima o custo restante até o objetivo. 
+Ele utiliza uma função de avaliação $f(n) = g(n) + h(n)$, onde $g(n)$ é o custo acumulado até o nó atual e $h(n)$ é a estimativa do custo restante. 
+Essa combinação permite que o A* explore o espaço de busca de maneira informada, priorizando os caminhos mais promissores e garantindo a solução ótima desde que a heurística seja admissível (isto é, nunca superestime o custo real).
+
+\section{Algoritmos de Busca Estudados}
+Nesta seção, são detalhados os algoritmos de busca implementados no projeto: \textbf{Busca em Largura (BFS)}, \textbf{Busca em Profundidade (DFS)}, \textbf{Dijkstra} e \textbf{A*}. 
 Cada um deles foi adaptado para operar sobre a estrutura de grafo que modela os estados possíveis do problema da Ponte e da Tocha, buscando o caminho que leva do estado inicial ao estado objetivo com o menor custo total.
 
 \subsection{Busca em Largura (BFS)}
-
-A \textit{Breadth-First Search} é um dos algoritmos mais fundamentais da teoria dos grafos. Sua lógica baseia-se em percorrer o grafo em \textit{camadas}, garantindo que todos os vértices a uma mesma distância do ponto de origem sejam explorados antes de prosseguir para níveis mais profundos.  
-
+A \textit{Breadth-First Search} é um dos algoritmos mais fundamentais da teoria dos grafos. Sua lógica baseia-se em percorrer o grafo em \textit{camadas}, garantindo que todos os vértices a uma mesma distância do ponto de origem sejam explorados antes de prosseguir para níveis mais profundos. 
 No código implementado, a BFS utiliza uma \textbf{fila} (\texttt{deque}) para armazenar os vértices a serem visitados e dicionários para registrar:
 \begin{itemize}
     \item as distâncias mínimas até cada vértice (\texttt{dist});
     \item e o vértice predecessor em relação a cada nó (\texttt{predecessor}), utilizado posteriormente na reconstrução do caminho.
 \end{itemize}
 
-\begin{lstlisting}[language=Python, caption={Trecho simplificado da função BFS.}]
+\begin{lstlisting}[caption={Trecho simplificado da função BFS.}]
 def bfs(graph, start):
     dist = {vertex: float("inf") for vertex in graph.graph}
     predecessor = {vertex: None for vertex in graph.graph}
@@ -260,12 +276,11 @@ def bfs(graph, start):
 A BFS garante a descoberta do caminho com o menor número de passos, mas não necessariamente com o menor custo acumulado. Por isso, seu uso neste problema serve como referência estrutural, e não como método ótimo em termos de tempo total de travessia.
 
 \subsection{Busca em Profundidade (DFS)}
-
 A \textit{Depth-First Search} é um algoritmo que explora o grafo de maneira recursiva ou iterativa, aprofundando-se em um caminho até que não haja mais vértices não visitados. Em seguida, realiza o retrocesso (\textit{backtracking}) para explorar outras alternativas.
 
 A implementação utiliza uma \textbf{pilha} para controlar os vértices a visitar e um conjunto \texttt{visited} para evitar repetições.
 
-\begin{lstlisting}[language=Python, caption={Trecho simplificado da função DFS.}]
+\begin{lstlisting}[caption={Trecho simplificado da função DFS.}]
 def dfs(graph, start):
     visited = set()
     stack = [start]
@@ -285,13 +300,12 @@ def dfs(graph, start):
 Embora não garanta o caminho ótimo, o DFS é útil para compreender a estrutura de conectividade do grafo e para verificar se todos os estados são alcançáveis a partir de uma dada configuração inicial. Sua vantagem está na baixa utilização de memória, uma vez que armazena apenas o caminho atual.
 
 \subsection{Algoritmo de Dijkstra}
-
-O algoritmo de Dijkstra é um método clássico para encontrar o caminho de menor custo entre um nó de origem e todos os outros vértices de um grafo ponderado com pesos não negativos.  
-Diferentemente da BFS, que assume custos unitários, Dijkstra considera explicitamente os pesos das arestas — no caso do problema estudado, o tempo de travessia entre estados.
+O algoritmo de Dijkstra é um método clássico para encontrar o caminho de menor custo entre um nó de origem e todos os outros vértices de um grafo ponderado com pesos não negativos. 
+Diferentemente da BFS, que assume custos unitários, Dijkstra considera explicitamente os pesos das arestas --- no caso do problema estudado, o tempo de travessia entre estados.
 
 A implementação utiliza uma \textbf{fila de prioridade} (\texttt{heapq}) para sempre expandir o vértice com a menor distância acumulada (\( g(n) \)).
 
-\begin{lstlisting}[language=Python, caption={Trecho da função Dijkstra.}]
+\begin{lstlisting}[caption={Trecho da função Dijkstra.}]
 def dijkstra(graph, start):
     dist = {vertex: float("inf") for vertex in graph}
     predecessor = {vertex: None for vertex in graph}
@@ -310,12 +324,11 @@ def dijkstra(graph, start):
     return dist, predecessor
 \end{lstlisting}
 
-O algoritmo retorna, portanto, tanto o custo mínimo de cada vértice a partir da origem quanto o dicionário de predecessores, o que permite reconstruir o caminho ótimo até o destino.  
+O algoritmo retorna, portanto, tanto o custo mínimo de cada vértice a partir da origem quanto o dicionário de predecessores, o que permite reconstruir o caminho ótimo até o destino. 
 No contexto da Ponte e da Tocha, ele representa uma versão determinística e exata para a minimização do tempo total de travessia, considerando pesos reais associados a cada transição.
 
 \subsection{Algoritmo A* (A Estrela)}
-
-O algoritmo A* combina os princípios do Dijkstra com o uso de uma \textbf{função heurística} \( h(n) \), que estima o custo restante até o objetivo.  
+O algoritmo A* combina os princípios do Dijkstra com o uso de uma \textbf{função heurística} \( h(n) \), que estima o custo restante até o objetivo. 
 Ele avalia cada estado por meio da função:
 \[
 f(n) = g(n) + h(n)
@@ -328,7 +341,7 @@ onde:
 
 No código, o conjunto de nós abertos (\texttt{open\_set}) é gerenciado como uma fila de prioridade. A cada iteração, o nó com o menor valor de \( f(n) \) é expandido.
 
-\begin{lstlisting}[language=Python, caption={Trecho da função A*.}]
+\begin{lstlisting}[caption={Trecho da função A*.}]
 def a_star(graph, start, goal, heuristic):
     from heapq import heappop, heappush
     open_set = []
@@ -352,11 +365,10 @@ def a_star(graph, start, goal, heuristic):
     return []
 \end{lstlisting}
 
-O desempenho do A* depende fortemente da escolha da heurística.  
+O desempenho do A* depende fortemente da escolha da heurística. 
 Se \( h(n) \) for \textit{admissível} (isto é, nunca superestimar o custo real até o objetivo), o A* garante a optimalidade da solução e tende a explorar menos nós que o Dijkstra, reduzindo o tempo de execução.
 
 \subsection{Comparativo geral}
-
 A Tabela \ref{tab:comparativo} resume as principais características e diferenças entre os algoritmos implementados.
 
 \begin{table}[H]
@@ -378,7 +390,7 @@ A* & Queue + h & Sim & Sim (se h ok) & Variável \\
 \end{tabular}
 \end{table}
 
-A escolha do algoritmo ideal depende da natureza do problema e da disponibilidade de informações adicionais.  
+A escolha do algoritmo ideal depende da natureza do problema e da disponibilidade de informações adicionais. 
 Para o caso da Ponte e da Tocha, o A* demonstrou ser o método mais eficiente em termos de custo computacional e qualidade da solução, quando utilizada uma heurística adequada à estrutura do problema.
 
 \section{Comparação e Discussão dos Resultados}
@@ -420,9 +432,9 @@ Os principais aprendizados incluem a importância de uma modelagem eficiente, a 
 
 Como melhorias futuras, recomenda-se explorar heurísticas mais sofisticadas para o A*, investigar abordagens híbridas ou baseadas em aprendizado de máquina para estimativas de custo, e testar a modelagem em versões mais complexas do problema, incluindo restrições adicionais, visando ampliar a aplicabilidade e otimização das soluções.
 
-
 \section*{Referências}
 \bibliographystyle{plain}
 \bibliography{references}
 
 \end{document}
+>>>>>>> 57689c43438edb28a83a2269368ebc9bb6dec058

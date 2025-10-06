@@ -10,8 +10,6 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 from matplotlib import animation
 
-
-
 class GraphPlotter:
     """
     Plots a graph using matplotlib and nx.

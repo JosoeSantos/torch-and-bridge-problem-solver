@@ -1,12 +1,15 @@
-from collections import deque
-from TAD import Graph
-from Bfs import bfs, reconstruct_path
-from Dijkstra import dijkstra_path, reconstruct_path
-from itertools import combinations
+import time
 from array import array
+from collections import deque
+from itertools import combinations
+
+from Astar import a_star, path_cost
+from Bfs import bfs, reconstruct_path
 from Dfs import dfs, dfs_path_reconstruct_path
+from Dijkstra import dijkstra_path, reconstruct_path
 from GraphPlotter import GraphPlotter
-from Astar import a_star, path_cost 
+from TAD import Graph
+
 # gera todas as combinações possiveis de um conjunto de elementos
 
 '''
@@ -24,7 +27,7 @@ Output:
 ('B', 'C')
 '''
 
-N = 4  # número de pessoas
+N = 12  # número de pessoas
 
 def fib_n(n):
     if n <= 0:
@@ -141,10 +144,40 @@ path_dfs = dfs_path_reconstruct_path(pred, start_v, goal_v)
 
 print(f"Caminho DFS: {path}")
 
+# def astar_heuristic(v):
+#     state = states[v]
+#     left = sum(1 for pos in state[:-1] if pos == 0)
+#     return (left + 1) // 2 * 10  # estimativa otimista
 def astar_heuristic(v):
     state = states[v]
-    left = sum(1 for pos in state[:-1] if pos == 0)
-    return (left + 1) // 2 * 10  # estimativa otimista
+    
+    people_on_left = [i for i, pos in enumerate(state[:-1]) if pos == 0]
+    people_on_right = [i for i, pos in enumerate(state[:-1]) if pos == 1]
+    
+    # A tocha está no lado esquerdo, então pessoas precisam ir para o lado direito
+    if state[-1] == 0:
+        # A estimativa é o custo das 2 pessoas mais lentas
+        # ou, se apenas uma pessoa resta, o tempo dela.
+        # Essa é uma heurística otimista e admissível.
+        sorted_times_left = sorted([TIMES[p] for p in people_on_left], reverse=True)
+        
+        if len(sorted_times_left) == 0:
+            return 0
+        elif len(sorted_times_left) == 1:
+            return sorted_times_left[0]
+        else:
+            return sorted_times_left[0] + sorted_times_left[1]
+    
+    # A tocha está no lado direito e precisa voltar para o lado esquerdo
+    else:
+        # O custo é o tempo da pessoa mais rápida para trazer a tocha
+        # de volta.
+        if not people_on_right:
+            return 0
+        
+        sorted_times_right = sorted([TIMES[p] for p in people_on_right])
+        
+        return sorted_times_right[0]
 
 path_a = a_star(G.graph, start_v, goal_v, astar_heuristic)
 
@@ -152,14 +185,41 @@ path_a = a_star(G.graph, start_v, goal_v, astar_heuristic)
 print(f"Caminho A*: {path}")
 print(f"Custo total: {path_cost(G.graph, path)}")
 
-plotter = GraphPlotter(G)
-plotter.create_nx_layout()
-plotter.plot_2d()
-# dijkstra é azul
-plotter.color_path(path, color="b", width=2.5)
-# astar é verde
-plotter.color_path(path_a, color="g", width=1.5)
-# dfs é vermelho
-plotter.color_path(path_dfs, color="r", width=0.7)
-# plotar o grafo
-plotter.show()
+print("-------------------")
+print(f"Némero de pessoas: {N}")
+# Execução do Dijkstra
+start_time_dijkstra = time.time()
+distances_dijkstra, pred_dijkstra = dijkstra_path(G.graph, start_v)
+end_time_dijkstra = time.time()
+dijkstra_duration = end_time_dijkstra - start_time_dijkstra
+
+# Exibir os resultados do Dijkstra
+cost_dijkstra = distances_dijkstra[goal_v]
+path_dijkstra = reconstruct_path(pred_dijkstra, start_v, goal_v)
+print(f"Dijkstra: Caminho encontrado em {dijkstra_duration:.4f} segundos.")
+print(f"Custo total (Dijkstra): {cost_dijkstra}")
+
+...
+
+# Execução do A*
+start_time_astar = time.time()
+path_a_star = a_star(G.graph, start_v, goal_v, astar_heuristic)
+end_time_astar = time.time()
+astar_duration = end_time_astar - start_time_astar
+
+# Exibir os resultados do A*
+cost_astar = path_cost(G.graph, path_a_star)
+print(f"A*: Caminho encontrado em {astar_duration:.4f} segundos.")
+print(f"Custo total (A*): {cost_astar}")
+
+# plotter = GraphPlotter(G)
+# plotter.create_nx_layout()
+# plotter.plot_2d()
+# # dijkstra é azul
+# plotter.color_path(path, color="b", width=2.5)
+# # astar é verde
+# plotter.color_path(path_a, color="g", width=1.5)
+# # dfs é vermelho
+# plotter.color_path(path_dfs, color="r", width=0.7)
+# # plotar o grafo
+# plotter.show()
