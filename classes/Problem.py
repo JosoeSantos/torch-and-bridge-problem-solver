@@ -124,23 +124,8 @@ dist, predecessor = bfs(G, start_v)
 # Exibir os caminhos para cada nó
 path = reconstruct_path(predecessor, start_v, goal_v)
 
-#print("Caminho (menor nº de passos):")
-#print(path if path else "goal não alcançado") # como o bfs n leva em consideração os pesos
-# o output n necessariamente sera o caminho otimo
-
-
-#distances = dijkstra(G.graph, start_v)
-# distances, pred  = dijkstra_path(G.graph, start_v)
-# path = reconstruct_path(pred, start_v, goal_v)
-
-
-# cost = distances[goal_v]
-
-# print(f"Caminho dijkstra: {path}")
-# print(f"Custo total: {cost}")
-
-# pred = dfs(G.graph, start_v)
-# path_dfs = dfs_path_reconstruct_path(pred, start_v, goal_v)
+pred = dfs(G.graph, start_v)
+path_dfs = dfs_path_reconstruct_path(pred, start_v, goal_v)
 
 # print(f"Caminho DFS: {path}")
 
@@ -188,18 +173,18 @@ print(f"Custo total: {path_cost(G.graph, path)}")
 print("-------------------")
 print(f"Némero de pessoas: {N}")
 # Execução do Dijkstra
-# start_time_dijkstra = time.time()
-# distances_dijkstra, pred_dijkstra = dijkstra_path(G.graph, start_v)
-# end_time_dijkstra = time.time()
-# dijkstra_duration = end_time_dijkstra - start_time_dijkstra
+start_time_dijkstra = time.time()
+distances_dijkstra, pred_dijkstra = dijkstra_path(G.graph, start_v)
+end_time_dijkstra = time.time()
+dijkstra_duration = end_time_dijkstra - start_time_dijkstra
 
 # Exibir os resultados do Dijkstra
-# cost_dijkstra = distances_dijkstra[goal_v]
-# path_dijkstra = reconstruct_path(pred_dijkstra, start_v, goal_v)
-# print(f"Dijkstra: Caminho encontrado em {dijkstra_duration:.4f} segundos.")
-# print(f"Custo total (Dijkstra): {cost_dijkstra}")
+cost_dijkstra = distances_dijkstra[goal_v]
+path_dijkstra = reconstruct_path(pred_dijkstra, start_v, goal_v)
+print(f"Dijkstra: Caminho encontrado em {dijkstra_duration:.4f} segundos.")
+print(f"Custo total (Dijkstra): {cost_dijkstra}")
 
-...
+
 
 # Execução do A*
 start_time_astar = time.time()
@@ -212,14 +197,16 @@ cost_astar = path_cost(G.graph, path_a_star)
 print(f"A*: Caminho encontrado em {astar_duration:.4f} segundos.")
 print(f"Custo total (A*): {cost_astar}")
 
-plotter = GraphPlotter(G, pretty=False)
-plotter.create_nx_layout()
-plotter.plot_2d()
+# plotter = GraphPlotter(G, pretty=False)
+# plotter.create_nx_layout()
+# plotter.plot_2d()
 # dijkstra é azul
-plotter.color_path(path_dijkstra, color="b", width=2.5)
-# astar é verde
-plotter.color_path(path_a_star, color="g", width=1.5)
-# dfs é vermelho
-plotter.color_path(path_dfs, color="r", width=0.7)
-# plotar o grafo
-plotter.show()
+# plotter.color_path(path_dijkstra, color="b", width=4.5)
+# # astar é verde
+# plotter.color_path(path_a_star, color="orange", width=2.5)
+# # dfs é vermelho
+# plotter.color_path(path_dfs, color="g", width=1.5)
+# # bfs é laranja
+# plotter.color_path(path, color="r", width=1.0)
+# # plotar o grafo
+# plotter.show()
