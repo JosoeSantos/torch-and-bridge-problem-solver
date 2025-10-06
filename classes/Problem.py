@@ -27,7 +27,7 @@ Output:
 ('B', 'C')
 '''
 
-N = 12  # número de pessoas
+N = 4  # número de pessoas
 
 def fib_n(n):
     if n <= 0:
@@ -212,14 +212,14 @@ cost_astar = path_cost(G.graph, path_a_star)
 print(f"A*: Caminho encontrado em {astar_duration:.4f} segundos.")
 print(f"Custo total (A*): {cost_astar}")
 
-# plotter = GraphPlotter(G)
-# plotter.create_nx_layout()
-# plotter.plot_2d()
-# # dijkstra é azul
-# plotter.color_path(path, color="b", width=2.5)
-# # astar é verde
-# plotter.color_path(path_a, color="g", width=1.5)
-# # dfs é vermelho
-# plotter.color_path(path_dfs, color="r", width=0.7)
-# # plotar o grafo
-# plotter.show()
+plotter = GraphPlotter(G, pretty=False)
+plotter.create_nx_layout()
+plotter.plot_2d()
+# dijkstra é azul
+plotter.color_path(path_dijkstra, color="b", width=2.5)
+# astar é verde
+plotter.color_path(path_a_star, color="g", width=1.5)
+# dfs é vermelho
+plotter.color_path(path_dfs, color="r", width=0.7)
+# plotar o grafo
+plotter.show()

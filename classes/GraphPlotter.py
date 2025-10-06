@@ -3,12 +3,10 @@ Plots a graph using plotly.
 """
 
 from TAD import Graph
-import plotly.graph_objects as go
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
-import plotly.express as px
-from matplotlib import animation
+
 
 class GraphPlotter:
     """
