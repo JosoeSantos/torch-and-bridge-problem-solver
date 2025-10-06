@@ -130,19 +130,19 @@ path = reconstruct_path(predecessor, start_v, goal_v)
 
 
 #distances = dijkstra(G.graph, start_v)
-distances, pred  = dijkstra_path(G.graph, start_v)
-path = reconstruct_path(pred, start_v, goal_v)
+# distances, pred  = dijkstra_path(G.graph, start_v)
+# path = reconstruct_path(pred, start_v, goal_v)
 
 
-cost = distances[goal_v]
+# cost = distances[goal_v]
 
-print(f"Caminho dijkstra: {path}")
-print(f"Custo total: {cost}")
+# print(f"Caminho dijkstra: {path}")
+# print(f"Custo total: {cost}")
 
-pred = dfs(G.graph, start_v)
-path_dfs = dfs_path_reconstruct_path(pred, start_v, goal_v)
+# pred = dfs(G.graph, start_v)
+# path_dfs = dfs_path_reconstruct_path(pred, start_v, goal_v)
 
-print(f"Caminho DFS: {path}")
+# print(f"Caminho DFS: {path}")
 
 # def astar_heuristic(v):
 #     state = states[v]
@@ -188,16 +188,16 @@ print(f"Custo total: {path_cost(G.graph, path)}")
 print("-------------------")
 print(f"Némero de pessoas: {N}")
 # Execução do Dijkstra
-start_time_dijkstra = time.time()
-distances_dijkstra, pred_dijkstra = dijkstra_path(G.graph, start_v)
-end_time_dijkstra = time.time()
-dijkstra_duration = end_time_dijkstra - start_time_dijkstra
+# start_time_dijkstra = time.time()
+# distances_dijkstra, pred_dijkstra = dijkstra_path(G.graph, start_v)
+# end_time_dijkstra = time.time()
+# dijkstra_duration = end_time_dijkstra - start_time_dijkstra
 
 # Exibir os resultados do Dijkstra
-cost_dijkstra = distances_dijkstra[goal_v]
-path_dijkstra = reconstruct_path(pred_dijkstra, start_v, goal_v)
-print(f"Dijkstra: Caminho encontrado em {dijkstra_duration:.4f} segundos.")
-print(f"Custo total (Dijkstra): {cost_dijkstra}")
+# cost_dijkstra = distances_dijkstra[goal_v]
+# path_dijkstra = reconstruct_path(pred_dijkstra, start_v, goal_v)
+# print(f"Dijkstra: Caminho encontrado em {dijkstra_duration:.4f} segundos.")
+# print(f"Custo total (Dijkstra): {cost_dijkstra}")
 
 ...
 
